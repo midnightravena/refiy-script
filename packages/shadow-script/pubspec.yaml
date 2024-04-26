@@ -1,0 +1,22 @@
+name: shadow_script
+description: ShadowScript is a nimble scripting language crafted in Dart specifically for seamless integration within Flutter applications.
+version: 0.0.1
+homepage: https://github.com/midnightravena/shadow-script
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  quiver: ^3.0.1
+  pub_semver: ^2.1.0
+  path: ^1.8.0
+  recase: ^4.0.0
+  meta: ^1.7.0
+  characters: ^1.2.0
+  fast_noise: ^2.0.0
+  intl: ^0.19.0
+
+dev_dependencies:
+  lints: ^3.0.0
+  test: ^1.17.7
+  analyzer: ^6.4.1
