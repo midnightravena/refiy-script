@@ -1,6 +1,6 @@
 <div align="center">
   <br />
-  <img src="" alt="Project Banner">
+  <img src="https://github.com/midnightravena/shadow-script/blob/main/assets/refiy.png" alt="Project Banner">
   <br />
-  <img src="https://img.shields.io/badge/-Dart-black?style=for-the-badge&logoColor=white&logo=dart&color=0c0c0c" alt="Made in dart" />  
+  <img src="https://img.shields.io/badge/-Dart-black?style=for-the-badge&logoColor=black&logo=dart&color=EDECE8" alt="Made in dart" />  
 </div>
