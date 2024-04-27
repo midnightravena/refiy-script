@@ -1,7 +1,7 @@
-name: shadow_script
-description: ShadowScript is a nimble scripting language crafted in Dart specifically for seamless integration within Flutter applications.
+name: refiy_script
+description: Refiy script is a nimble scripting language crafted in Dart specifically for seamless integration within Flutter applications.
 version: 0.0.1
-homepage: https://github.com/midnightravena/shadow-script
+homepage: https://github.com/midnightravena/refiy-script
 
 environment:
   sdk: ^3.0.0
