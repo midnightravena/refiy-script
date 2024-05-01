@@ -243,3 +243,22 @@ class ASTLiteralNull extends ASTNode {
     super.length = 0,
   }) : super(InternalIdentifier.literalNull);
 }
+
+class ASTLiteralBoolean extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitBooleanExpr(this);
+
+  final bool _value;
+
+  @override
+  bool get value => _value;
+
+  ASTLiteralBoolean(
+    this._value, {
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.literalBoolean);
+}
