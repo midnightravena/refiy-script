@@ -849,3 +849,36 @@ class BinaryExpr extends ASTNode {
           isAwait: left.isAwait || right.isAwait,
         );
 }
+
+class TernaryExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitTernaryExpr(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    condition.accept(visitor);
+    thenBranch.accept(visitor);
+    elseBranch.accept(visitor);
+  }
+
+  final ASTNode condition;
+
+  final ASTNode thenBranch;
+
+  final ASTNode elseBranch;
+
+  TernaryExpr(
+    this.condition,
+    this.thenBranch,
+    this.elseBranch, {
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.ternaryExpression,
+          isAwait:
+              condition.isAwait || thenBranch.isAwait || elseBranch.isAwait,
+        );
+}
