@@ -175,3 +175,45 @@ class ASTSource extends ASTNode {
   }) : super(InternalIdentifier.source, isStatement: true) {
   }
 }
+
+class ASTCompilation extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitCompilation(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    for (final node in values.values) {
+      node.accept(visitor);
+    }
+    for (final node in sources.values) {
+      node.accept(visitor);
+    }
+  }
+
+  final Map<String, ASTSource> values;
+
+  final Map<String, ASTSource> sources;
+
+  final String entryFullname;
+
+  final HTResourceType entryResourceType;
+
+  final List<RSError> errors;
+
+  final Version? version;
+
+  ASTCompilation({
+    required this.values,
+    required this.sources,
+    required this.entryFullname,
+    required this.entryResourceType,
+    required this.errors,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+    this.version,
+  }) : super(InternalIdentifier.compilation, isStatement: true) {
+  }
+}
