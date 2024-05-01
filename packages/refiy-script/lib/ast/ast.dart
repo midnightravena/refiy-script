@@ -1535,3 +1535,200 @@ class ImportExportDecl extends Statement {
             ? InternalIdentifier.exportStatement
             : InternalIdentifier.importStatement);
 }
+
+class NamespaceDecl extends Statement {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitNamespaceDecl(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    definition.accept(visitor);
+  }
+
+  final IdentifierExpr id;
+
+  final String? classId;
+
+  final BlockStmt definition;
+
+  final bool isTopLevel;
+
+  bool get isMember => classId != null;
+
+  final bool isPrivate;
+
+  NamespaceDecl(
+    this.id,
+    this.definition, {
+    this.classId,
+    this.isPrivate = false,
+    this.isTopLevel = false,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.namespaceDeclaration,
+          isBlock: true,
+        );
+}
+
+class TypeAliasDecl extends Statement {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitTypeAliasDecl(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    typeValue.accept(visitor);
+  }
+
+  final IdentifierExpr id;
+
+  final String? classId;
+
+  final List<GenericTypeParameterExpr> genericTypeParameters;
+
+  final TypeExpr typeValue;
+
+  bool get isMember => classId != null;
+
+  final bool isPrivate;
+
+  final bool isTopLevel;
+
+  TypeAliasDecl(
+    this.id,
+    this.typeValue, {
+    this.classId,
+    this.genericTypeParameters = const [],
+    super.hasEndOfStmtMark = false,
+    this.isPrivate = false,
+    this.isTopLevel = false,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.typeAliasDeclaration);
+}
+
+// class ConstDecl extends AstNode {
+//   @override
+//   dynamic accept(AbstractAstVisitor visitor) => visitor.visitConstDecl(this);
+
+//   @override
+//   void subAccept(AbstractAstVisitor visitor) {
+//     // id.accept(visitor);
+//     declType?.accept(visitor);
+//     constExpr.accept(visitor);
+//   }
+
+//   final IdentifierExpr id;
+
+//   final String? classId;
+
+//   final TypeExpr? declType;
+
+//   final AstNode constExpr;
+
+//   @override
+//   final bool hasEndOfStmtMark;
+
+//   final bool isTopLevel;
+
+//   ConstDecl(this.id, this.constExpr,
+//       {this.declType,
+//       this.classId,
+//       this.hasEndOfStmtMark = false,
+//       this.isTopLevel = false,
+//       RSSource? source,
+//       int line = 0,
+//       int column = 0,
+//       int offset = 0,
+//       int length = 0,})
+//       : super(InternalIdentifier.constantDeclaration,
+//             source: source,
+//             line: line,
+//             column: column,
+//             offset: offset,
+//             length: length);
+// }
+
+class VarDecl extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitVarDecl(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    declType?.accept(visitor);
+    initializer?.accept(visitor);
+  }
+
+  final IdentifierExpr id;
+
+  final String? _internalName;
+
+  String get internalName => _internalName ?? id.id;
+
+  final String? classId;
+
+  final TypeExpr? declType;
+
+  ASTNode? initializer;
+
+  // final bool typeInferrence;
+
+  bool get isMember => classId != null;
+
+  final bool isConst;
+
+  final bool isStructField;
+
+  final bool isExternal;
+
+  final bool isStatic;
+
+  final bool isMutable;
+
+  final bool isPrivate;
+
+  final bool isTopLevel;
+
+  final bool isField;
+
+  final bool lateFinalize;
+
+  final bool lateInitialize;
+
+  final bool hasEndOfStmtMark;
+
+  VarDecl(
+    this.id, {
+    String? internalName,
+    this.classId,
+    this.declType,
+    this.initializer,
+    super.isStatement = true,
+    this.hasEndOfStmtMark = false,
+    // this.typeInferrence = false,
+    this.isConst = false,
+    this.isStructField = false,
+    this.isExternal = false,
+    this.isStatic = false,
+    this.isMutable = false,
+    this.isPrivate = false,
+    this.isTopLevel = false,
+    this.isField = false,
+    this.lateFinalize = false,
+    this.lateInitialize = false,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  })  : _internalName = internalName,
+        super(InternalIdentifier.variableDeclaration);
+}
