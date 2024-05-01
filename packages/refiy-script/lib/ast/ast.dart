@@ -1061,3 +1061,85 @@ class IfExpr extends ASTNode {
     }
   }
 }
+
+class ForExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitForStmt(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    init?.accept(visitor);
+    condition?.accept(visitor);
+    increment?.accept(visitor);
+    loop.accept(visitor);
+  }
+
+  final VarDecl? init;
+
+  final ASTNode? condition;
+
+  final ASTNode? increment;
+
+  final bool hasBracket;
+
+  final BlockStmt loop;
+
+  ForExpr(
+    this.init,
+    this.condition,
+    this.increment,
+    this.loop, {
+    this.hasBracket = false,
+    super.isBlock,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.forExpression,
+          isAwait: (init?.isAwait ?? false) ||
+              (condition?.isAwait ?? false) ||
+              (increment?.isAwait ?? false) ||
+              loop.isAwait,
+        );
+}
+
+class ForRangeExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitForRangeStmt(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    iterator.accept(visitor);
+    collection.accept(visitor);
+    loop.accept(visitor);
+  }
+
+  final VarDecl iterator;
+
+  final ASTNode collection;
+
+  final bool hasBracket;
+
+  final BlockStmt loop;
+
+  final bool iterateValue;
+
+  ForRangeExpr(
+    this.iterator,
+    this.collection,
+    this.loop, {
+    this.hasBracket = false,
+    this.iterateValue = false,
+    super.isBlock,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.forRangeExpression,
+          isAwait: collection.isAwait || loop.isAwait,
+        );
+}
