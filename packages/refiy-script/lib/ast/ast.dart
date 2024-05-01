@@ -119,3 +119,59 @@ class ASTComment extends ASTAnnotation {
           isTrailing: token.isTrailing,
         );
 }
+
+class ASTEmptyLine extends ASTAnnotation {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitEmptyLine(this);
+
+  ASTEmptyLine({
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.emptyLine,
+          content: '\n',
+          isDocumentation: false,
+        );
+}
+
+/// Parse result of a single file
+class ASTSource extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitSource(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    for (final stmt in nodes) {
+      stmt.accept(visitor);
+    }
+  }
+
+  String get fullName => source!.fullName;
+
+  HTResourceType get resourceType => source!.type;
+
+  LineInfo get lineInfo => source!.lineInfo;
+
+  final List<ImportExportDecl> imports;
+
+  final List<ASTNode> nodes;
+
+  final List<RSError> errors;
+
+  bool isResolved = false;
+
+  ASTSource({
+    required this.nodes,
+    this.imports = const [],
+    this.errors = const [],
+    required super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.source, isStatement: true) {
+  }
+}
