@@ -1357,3 +1357,44 @@ class DoStmt extends Statement {
           isAwait: loop.isAwait || (condition?.isAwait ?? false),
         );
 }
+
+class SwitchStmt extends Statement {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitSwitch(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    condition?.accept(visitor);
+    for (final caseExpr in cases.keys) {
+      caseExpr.accept(visitor);
+      final branch = cases[caseExpr]!;
+      branch.accept(visitor);
+    }
+    elseBranch?.accept(visitor);
+  }
+
+  final ASTNode? condition;
+
+  final Map<ASTNode, ASTNode> cases;
+
+  final ASTNode? elseBranch;
+
+  SwitchStmt(
+    this.cases,
+    this.elseBranch,
+    this.condition, {
+    super.isStatement = true,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.switchStatement,
+          isAwait: (condition?.isAwait ?? false) ||
+              (elseBranch?.isAwait ?? false) ||
+              cases.keys.any((element) => element.isAwait) ||
+              cases.values.any((element) => element.isAwait),
+          isBlock: true,
+        );
+}
