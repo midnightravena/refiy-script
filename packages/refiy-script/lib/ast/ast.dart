@@ -882,3 +882,182 @@ class TernaryExpr extends ASTNode {
               condition.isAwait || thenBranch.isAwait || elseBranch.isAwait,
         );
 }
+
+class AssignExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitAssignExpr(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    left.accept(visitor);
+    right.accept(visitor);
+  }
+
+  final ASTNode left;
+
+  final String op;
+
+  final ASTNode right;
+
+  AssignExpr(
+    this.left,
+    this.op,
+    this.right, {
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.assignExpression,
+          isAwait: right.isAwait,
+        );
+}
+
+class MemberExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitMemberExpr(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    object.accept(visitor);
+    key.accept(visitor);
+  }
+
+  final ASTNode object;
+
+  final IdentifierExpr key;
+
+  final bool isNullable;
+
+  MemberExpr(
+    this.object,
+    this.key, {
+    this.isNullable = false,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.memberGetExpression,
+          isAwait: object.isAwait,
+        );
+}
+
+class SubExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitSubExpr(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    object.accept(visitor);
+    key.accept(visitor);
+  }
+
+  final ASTNode object;
+
+  final ASTNode key;
+
+  final bool isNullable;
+
+  SubExpr(
+    this.object,
+    this.key, {
+    this.isNullable = false,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.subGetExpression,
+          isAwait: object.isAwait || key.isAwait,
+        );
+}
+
+class CallExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitCallExpr(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    callee.accept(visitor);
+    for (final posArg in positionalArgs) {
+      posArg.accept(visitor);
+    }
+    for (final namedArg in namedArgs.values) {
+      namedArg.accept(visitor);
+    }
+  }
+
+  final ASTNode callee;
+
+  final ASTAnnotation? documentationsWithinEmptyContent;
+
+  final List<ASTNode> positionalArgs;
+
+  final Map<String, ASTNode> namedArgs;
+
+  final bool isNullable;
+
+  final bool hasNewOperator;
+
+  CallExpr(
+    this.callee, {
+    this.positionalArgs = const [],
+    this.namedArgs = const {},
+    this.documentationsWithinEmptyContent,
+    this.isNullable = false,
+    this.hasNewOperator = false,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.callExpression,
+          isAwait: callee.isAwait ||
+              positionalArgs.any((element) => element.isAwait) ||
+              namedArgs.values.any((element) => element.isAwait),
+        );
+}
+
+class IfExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitIf(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    condition.accept(visitor);
+    thenBranch.accept(visitor);
+    elseBranch?.accept(visitor);
+  }
+
+  final ASTNode condition;
+
+  final ASTNode thenBranch;
+
+  final ASTNode? elseBranch;
+
+  IfExpr(
+    this.condition,
+    this.thenBranch, {
+    this.elseBranch,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.ifExpression,
+          isAwait: condition.isAwait ||
+              thenBranch.isAwait ||
+              (elseBranch?.isAwait ?? false),
+          isBlock: thenBranch.isBlock,
+        ) {
+    if (elseBranch != null) {
+      assert(thenBranch.isBlock == elseBranch!.isBlock);
+    }
+  }
+}
