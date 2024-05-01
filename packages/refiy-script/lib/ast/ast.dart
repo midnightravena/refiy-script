@@ -262,3 +262,230 @@ class ASTLiteralBoolean extends ASTNode {
     super.length = 0,
   }) : super(InternalIdentifier.literalBoolean);
 }
+
+class ASTLiteralInteger extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitIntLiteralExpr(this);
+
+  final int _value;
+
+  @override
+  int get value => _value;
+
+  ASTLiteralInteger(
+    this._value, {
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.literalInteger);
+}
+
+class ASTLiteralFloat extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitFloatLiteralExpr(this);
+
+  final double _value;
+
+  @override
+  double get value => _value;
+
+  ASTLiteralFloat(
+    this._value, {
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.literalFloat);
+}
+
+class ASTLiteralString extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitStringLiteralExpr(this);
+
+  final String _value;
+
+  @override
+  String get value => _value;
+
+  final String quotationLeft;
+
+  final String quotationRight;
+
+  ASTLiteralString(
+    this._value,
+    this.quotationLeft,
+    this.quotationRight, {
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.literalString);
+}
+
+class ASTStringInterpolation extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitStringInterpolationExpr(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    for (final expr in interpolations) {
+      expr.accept(visitor);
+    }
+  }
+
+  final String text;
+
+  final String quotationLeft;
+
+  final String quotationRight;
+
+  final List<ASTNode> interpolations;
+
+  ASTStringInterpolation(
+    this.text,
+    this.quotationLeft,
+    this.quotationRight,
+    this.interpolations, {
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.stringInterpolation,
+          isAwait: interpolations.any((element) => element.isAwait),
+        ) {
+    // for (final ast in interpolations) {
+    //   ast.parent = this;
+    // }
+  }
+}
+
+class IdentifierExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitIdentifierExpr(this);
+
+  final String id;
+
+  final bool isMarked;
+
+  final bool isLocal;
+
+  /// This value is null untill assigned by analyzer
+  RSDeclarationNamespace<ASTNode?>? analysisNamespace;
+
+  /// This value is null untill assigned by analyzer
+  HTDeclaration? declaration;
+
+  IdentifierExpr(
+    this.id, {
+    this.isMarked = false,
+    this.isLocal = true,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.identifierExpression);
+
+  IdentifierExpr.fromToken(
+    Token idTok, {
+    bool isMarked = false,
+    bool isLocal = true,
+    RSSource? source,
+  }) : this(idTok.literal,
+            isLocal: isLocal,
+            source: source,
+            line: idTok.line,
+            column: idTok.column,
+            offset: idTok.offset,
+            length: idTok.length);
+}
+
+class SpreadExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitSpreadExpr(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    collection.accept(visitor);
+  }
+
+  final ASTNode collection;
+
+  SpreadExpr(
+    this.collection, {
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.spreadExpression,
+          isAwait: collection.isAwait,
+        );
+}
+
+class CommaExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitCommaExpr(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    for (final item in list) {
+      item.accept(visitor);
+    }
+  }
+
+  final List<ASTNode> list;
+
+  final bool isLocal;
+
+  CommaExpr(
+    this.list, {
+    this.isLocal = true,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.commaExpression,
+          isAwait: list.any((element) => element.isAwait),
+        );
+}
+
+class ListExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitListExpr(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    for (final item in list) {
+      item.accept(visitor);
+    }
+  }
+
+  final List<ASTNode> list;
+
+  ListExpr(
+    this.list, {
+    RSSource? source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.literalList,
+          isAwait: list.any((element) => element.isAwait),
+        );
+}
