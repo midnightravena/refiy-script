@@ -1732,3 +1732,113 @@ class VarDecl extends ASTNode {
   })  : _internalName = internalName,
         super(InternalIdentifier.variableDeclaration);
 }
+
+class DestructuringDecl extends Statement {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitDestructuringDecl(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    initializer.subAccept(visitor);
+  }
+
+  final Map<IdentifierExpr, TypeExpr?> ids;
+
+  ASTNode initializer;
+
+  final bool isVector;
+
+  final bool isTopLevel;
+
+  final bool isMutable;
+
+  DestructuringDecl({
+    required this.ids,
+    required this.isVector,
+    required this.initializer,
+    this.isTopLevel = false,
+    this.isMutable = false,
+    super.hasEndOfStmtMark = false,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.destructuringDeclaration);
+}
+
+class ParamDecl extends VarDecl {
+  @override
+  String get type => InternalIdentifier.parameterDeclaration;
+
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitParamDecl(this);
+
+  final bool isVariadic;
+
+  final bool isOptional;
+
+  final bool isNamed;
+
+  final bool isInitialization;
+
+  ParamDecl(
+    super.id, {
+    super.declType,
+    super.initializer,
+    this.isVariadic = false,
+    this.isOptional = false,
+    this.isNamed = false,
+    this.isInitialization = false,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          isMutable: true,
+          isStatement: false,
+        );
+}
+
+class RedirectingConstructorCallExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitReferConstructCallExpr(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    callee.accept(visitor);
+    key?.accept(visitor);
+    for (final posArg in positionalArgs) {
+      posArg.accept(visitor);
+    }
+    for (final namedArg in namedArgs.values) {
+      namedArg.accept(visitor);
+    }
+  }
+
+  final IdentifierExpr callee;
+
+  final IdentifierExpr? key;
+
+  final List<ASTNode> positionalArgs;
+
+  final Map<String, ASTNode> namedArgs;
+
+  final bool hasEndOfStmtMark;
+
+  RedirectingConstructorCallExpr(
+    this.callee,
+    this.positionalArgs,
+    this.namedArgs, {
+    this.hasEndOfStmtMark = false,
+    this.key,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.redirectingConstructor);
+}
