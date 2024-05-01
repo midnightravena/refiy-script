@@ -217,3 +217,29 @@ class ASTCompilation extends ASTNode {
   }) : super(InternalIdentifier.compilation, isStatement: true) {
   }
 }
+
+class ASTEmpty extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitEmptyExpr(this);
+
+  ASTEmpty({
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.empty);
+}
+
+class ASTLiteralNull extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitNullExpr(this);
+
+  ASTLiteralNull({
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.literalNull);
+}
