@@ -1328,3 +1328,32 @@ class WhileStmt extends Statement {
           isAwait: condition.isAwait || loop.isAwait,
         );
 }
+
+class DoStmt extends Statement {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitDoStmt(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    loop.accept(visitor);
+    condition?.accept(visitor);
+  }
+
+  final BlockStmt loop;
+
+  final ASTNode? condition;
+
+  DoStmt(
+    this.loop,
+    this.condition, {
+    super.hasEndOfStmtMark = false,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.doStatement,
+          isAwait: loop.isAwait || (condition?.isAwait ?? false),
+        );
+}
