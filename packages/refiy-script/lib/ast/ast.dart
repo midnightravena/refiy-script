@@ -516,3 +516,41 @@ class InOfExpr extends ASTNode {
           isAwait: collection.isAwait,
         );
 }
+
+class GroupExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitGroupExpr(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    inner.accept(visitor);
+  }
+
+  final ASTNode inner;
+
+  GroupExpr(
+    this.inner, {
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.groupExpression,
+          isAwait: inner.isAwait,
+        );
+}
+
+abstract class TypeExpr extends ASTNode {
+  bool get isLocal;
+
+  TypeExpr(
+    super.exprType, {
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  });
+}
+
