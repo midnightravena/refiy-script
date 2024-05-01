@@ -1398,3 +1398,140 @@ class SwitchStmt extends Statement {
           isBlock: true,
         );
 }
+
+class BreakStmt extends Statement {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitBreakStmt(this);
+
+  final Token keyword;
+
+  BreakStmt(
+    this.keyword, {
+    super.hasEndOfStmtMark = false,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.breakStatement);
+}
+
+class ContinueStmt extends Statement {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitContinueStmt(this);
+
+  final Token keyword;
+
+  ContinueStmt(
+    this.keyword, {
+    super.hasEndOfStmtMark = false,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.continueStatement);
+}
+
+class DeleteStmt extends Statement {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitDeleteStmt(this);
+
+  final String symbol;
+
+  DeleteStmt(
+    this.symbol, {
+    super.hasEndOfStmtMark = false,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.deleteStatement);
+}
+
+class DeleteMemberStmt extends Statement {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitDeleteMemberStmt(this);
+
+  final ASTNode object;
+
+  final String key;
+
+  DeleteMemberStmt(
+    this.object,
+    this.key, {
+    super.hasEndOfStmtMark = false,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.deleteMemberStatement);
+}
+
+class DeleteSubStmt extends Statement {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitDeleteSubStmt(this);
+
+  final ASTNode object;
+
+  final ASTNode key;
+
+  DeleteSubStmt(
+    this.object,
+    this.key, {
+    super.hasEndOfStmtMark = false,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.deleteSubMemberStatement);
+}
+
+class ImportExportDecl extends Statement {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitImportExportDecl(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    alias?.accept(visitor);
+  }
+
+  final String? fromPath;
+
+  final IdentifierExpr? alias;
+
+  final List<IdentifierExpr> showList;
+
+  final bool isPreloadedModule;
+
+  final bool isExport;
+
+  bool get willExportAll => isExport && showList.isEmpty;
+
+  /// The normalized absolute path of the imported file.
+  /// It is left as null at the first time of parsing,
+  /// because at this time we don't know yet.
+  String? fullFromPath;
+
+  ImportExportDecl({
+    this.fromPath,
+    this.alias,
+    this.showList = const [],
+    this.isPreloadedModule = false,
+    this.isExport = false,
+    super.hasEndOfStmtMark = false,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(isExport
+            ? InternalIdentifier.exportStatement
+            : InternalIdentifier.importStatement);
+}
