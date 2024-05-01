@@ -740,3 +740,81 @@ class StructuralTypeExpr extends TypeExpr {
     super.length = 0,
   }) : super(InternalIdentifier.structuralTypeExpression);
 }
+
+class GenericTypeParameterExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitGenericTypeParamExpr(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    superType?.accept(visitor);
+  }
+
+  final IdentifierExpr id;
+
+  final NominalTypeExpr? superType;
+
+  GenericTypeParameterExpr(
+    this.id, {
+    this.superType,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.genericTypeParamExpression);
+}
+
+/// -e, !e，++e, --e
+class UnaryPrefixExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitUnaryPrefixExpr(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    object.accept(visitor);
+  }
+
+  final String op;
+
+  final ASTNode object;
+
+  UnaryPrefixExpr(
+    this.op,
+    this.object, {
+    super.isAwait,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.unaryPrefixExpression);
+}
+
+/// e++, e--
+class UnaryPostfixExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitUnaryPostfixExpr(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    object.accept(visitor);
+  }
+
+  final ASTNode object;
+
+  final String op;
+
+  UnaryPostfixExpr(
+    this.object,
+    this.op, {
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.unaryPostfixExpression);
+}
