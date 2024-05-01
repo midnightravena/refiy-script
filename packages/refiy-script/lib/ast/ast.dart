@@ -1143,3 +1143,188 @@ class ForRangeExpr extends ASTNode {
           isAwait: collection.isAwait || loop.isAwait,
         );
 }
+
+abstract class Statement extends ASTNode {
+  bool hasEndOfStmtMark;
+
+  Statement(
+    super.type, {
+    super.isAwait,
+    this.hasEndOfStmtMark = false,
+    super.isStatement = true,
+    super.isBlock,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) {
+    if (isBlock) {
+      assert(!hasEndOfStmtMark);
+    }
+  }
+}
+
+class AssertStmt extends Statement {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitAssertStmt(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    expr.accept(visitor);
+  }
+
+  final ASTNode expr;
+
+  AssertStmt(
+    this.expr, {
+    super.hasEndOfStmtMark = false,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.assertStatement,
+          isAwait: expr.isAwait,
+        );
+}
+
+class ThrowStmt extends Statement {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitThrowStmt(this);
+
+  final ASTNode message;
+
+  ThrowStmt(
+    this.message, {
+    super.hasEndOfStmtMark = false,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.throwStatement,
+          isAwait: message.isAwait,
+          isBlock: message.isBlock,
+        );
+}
+
+class ExprStmt extends Statement {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitExprStmt(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    expr.accept(visitor);
+  }
+
+  final ASTNode expr;
+
+  ExprStmt(
+    this.expr, {
+    super.hasEndOfStmtMark = false,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.expressionStatement,
+          isAwait: expr.isAwait,
+          isBlock: expr.isBlock,
+        );
+}
+
+class BlockStmt extends Statement {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitBlockStmt(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    for (final stmt in statements) {
+      stmt.accept(visitor);
+    }
+  }
+
+  final List<ASTNode> statements;
+
+  final bool isCodeBlock;
+
+  final String? id;
+
+  BlockStmt(
+    this.statements, {
+    this.isCodeBlock = true,
+    this.id,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.blockStatement,
+          isAwait: statements.any((element) => element.isAwait),
+          isBlock: true,
+        );
+}
+
+class ReturnStmt extends Statement {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitReturnStmt(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    value?.accept(visitor);
+  }
+
+  final Token keyword;
+
+  final ASTNode? returnValue;
+
+  ReturnStmt(
+    this.keyword, {
+    this.returnValue,
+    super.hasEndOfStmtMark = false,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.returnStatement,
+          isAwait: returnValue?.isAwait ?? false,
+          isBlock: returnValue?.isBlock ?? false,
+        );
+}
+
+class WhileStmt extends Statement {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitWhileStmt(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    condition.accept(visitor);
+    loop.accept(visitor);
+  }
+
+  final ASTNode condition;
+
+  final BlockStmt loop;
+
+  WhileStmt(
+    this.condition,
+    this.loop, {
+    super.isBlock,
+    super.hasEndOfStmtMark,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.whileStatement,
+          isAwait: condition.isAwait || loop.isAwait,
+        );
+}
