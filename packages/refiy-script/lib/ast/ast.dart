@@ -90,3 +90,32 @@ abstract class ASTAnnotation extends ASTNode {
     super.length = 0,
   });
 }
+
+class ASTComment extends ASTAnnotation {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitComment(this);
+
+  final bool isMultiLine;
+
+  final bool isTrailing;
+
+  ASTComment({
+    required String content,
+    required super.isDocumentation,
+    required this.isMultiLine,
+    required this.isTrailing,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.comment, content: content);
+
+  ASTComment.fromCommentToken(TokenComment token)
+      : this(
+          content: token.literal,
+          isDocumentation: token.isDocumentation,
+          isMultiLine: token.isMultiLine,
+          isTrailing: token.isTrailing,
+        );
+}
