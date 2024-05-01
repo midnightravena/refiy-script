@@ -1842,3 +1842,258 @@ class RedirectingConstructorCallExpr extends ASTNode {
     super.length = 0,
   }) : super(InternalIdentifier.redirectingConstructor);
 }
+
+class FuncDecl extends Statement {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitFuncDecl(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    returnType?.accept(visitor);
+    redirectingConstructorCall?.accept(visitor);
+    for (final param in paramDecls) {
+      param.accept(visitor);
+    }
+    definition?.accept(visitor);
+  }
+
+  final String internalName;
+
+  final IdentifierExpr? id;
+
+  final String? classId;
+
+  final List<GenericTypeParameterExpr> genericTypeParameters;
+
+  final String? externalTypeId;
+
+  final TypeExpr? returnType;
+
+  final RedirectingConstructorCallExpr? redirectingConstructorCall;
+
+  final bool hasParamDecls;
+
+  final List<ParamDecl> paramDecls;
+
+  final int minArity;
+
+  final int maxArity;
+
+  final bool isExpressionBody;
+
+  final ASTNode? definition;
+
+  bool get isAbstract => definition == null && !isExternal;
+
+  final bool isAsync;
+
+  final bool isExternal;
+
+  final bool isStatic;
+
+  final bool isConst;
+
+  final bool isVariadic;
+
+  final bool isPrivate;
+
+  final bool isTopLevel;
+
+  final bool isField;
+
+  final FunctionCategory category;
+
+  FuncDecl(
+    this.internalName, {
+    this.id,
+    this.classId,
+    this.genericTypeParameters = const [],
+    this.externalTypeId,
+    this.redirectingConstructorCall,
+    this.paramDecls = const [],
+    this.hasParamDecls = true,
+    this.returnType,
+    this.minArity = 0,
+    this.maxArity = 0,
+    this.isExpressionBody = false,
+    this.definition,
+    this.isAsync = false,
+    this.isExternal = false,
+    this.isStatic = false,
+    this.isConst = false,
+    this.isVariadic = false,
+    this.isPrivate = false,
+    this.isTopLevel = false,
+    this.isField = false,
+    this.category = FunctionCategory.normal,
+    super.isStatement,
+    super.hasEndOfStmtMark,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.functionDeclaration,
+          isBlock: (!isExpressionBody && definition != null),
+        );
+}
+
+class ClassDecl extends Statement {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitClassDecl(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    superType?.accept(visitor);
+    for (final implementsType in implementsTypes) {
+      implementsType.accept(visitor);
+    }
+    for (final withType in withTypes) {
+      withType.accept(visitor);
+    }
+    definition.accept(visitor);
+  }
+
+  final IdentifierExpr id;
+
+  final String? classId;
+
+  final List<GenericTypeParameterExpr> genericTypeParameters;
+
+  final TypeExpr? superType;
+
+  final List<NominalTypeExpr> implementsTypes;
+
+  final List<NominalTypeExpr> withTypes;
+
+  bool get isMember => classId != null;
+
+  bool get isNested => classId != null;
+
+  final bool isExternal;
+
+  final bool isAbstract;
+
+  final bool isPrivate;
+
+  final bool isTopLevel;
+
+  final bool hasUserDefinedConstructor;
+
+  final bool lateResolve;
+
+  final BlockStmt definition;
+
+  ClassDecl(
+    this.id,
+    this.definition, {
+    this.classId,
+    this.genericTypeParameters = const [],
+    this.superType,
+    this.implementsTypes = const [],
+    this.withTypes = const [],
+    this.isExternal = false,
+    this.isAbstract = false,
+    this.isPrivate = false,
+    this.isTopLevel = false,
+    this.hasUserDefinedConstructor = false,
+    this.lateResolve = true,
+    super.hasEndOfStmtMark,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.classDeclaration,
+          isStatement: true,
+          isBlock: true,
+        );
+}
+
+class EnumDecl extends Statement {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitEnumDecl(this);
+
+  final IdentifierExpr id;
+
+  final String? classId;
+
+  final List<IdentifierExpr> enumerations;
+
+  bool get isMember => classId != null;
+
+  final bool isExternal;
+
+  final bool isPrivate;
+
+  final bool isTopLevel;
+
+  @override
+  bool get isExpression => false;
+
+  EnumDecl(
+    this.id,
+    this.enumerations, {
+    this.classId,
+    this.isExternal = false,
+    this.isPrivate = false,
+    this.isTopLevel = false,
+    super.hasEndOfStmtMark,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.enumDeclaration,
+          isStatement: true,
+          isBlock: true,
+        );
+}
+
+class StructDecl extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitStructDecl(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    prototypeId?.accept(visitor);
+    for (final node in definition) {
+      node.accept(visitor);
+    }
+  }
+
+  final IdentifierExpr id;
+
+  final IdentifierExpr? prototypeId;
+
+  final List<IdentifierExpr> mixinIds;
+
+  final List<ASTNode> definition;
+
+  final bool isPrivate;
+
+  final bool isTopLevel;
+
+  // final bool lateInitialize;
+
+  StructDecl(
+    this.id,
+    this.definition, {
+    this.prototypeId,
+    this.mixinIds = const [],
+    this.isPrivate = false,
+    this.isTopLevel = false,
+    super.isStatement,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.structDeclaration,
+          isBlock: true,
+        );
+}
