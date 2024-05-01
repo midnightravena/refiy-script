@@ -554,3 +554,189 @@ abstract class TypeExpr extends ASTNode {
   });
 }
 
+class IntrinsicTypeExpr extends TypeExpr {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitIntrinsicTypeExpr(this);
+
+  final IdentifierExpr id;
+
+  final bool isTop;
+
+  final bool isBottom;
+
+  @override
+  final bool isLocal;
+
+  IntrinsicTypeExpr({
+    required this.id,
+    this.isTop = false,
+    this.isBottom = false,
+    this.isLocal = true,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.intrinsicTypeExpression);
+}
+
+class NominalTypeExpr extends TypeExpr {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitNominalTypeExpr(this);
+
+  final IdentifierExpr id;
+
+  final List<IdentifierExpr> namespacesWithin;
+
+  final List<TypeExpr> arguments;
+
+  final bool isNullable;
+
+  @override
+  final bool isLocal;
+
+  NominalTypeExpr({
+    required this.id,
+    this.namespacesWithin = const [],
+    this.arguments = const [],
+    this.isNullable = false,
+    this.isLocal = true,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.nominalTypeExpression);
+}
+
+class ParamTypeExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitParamTypeExpr(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    declType.accept(visitor);
+  }
+
+  /// Wether this is an optional positional parameter.
+  final bool isOptionalPositional;
+
+  /// Wether this is a variadic parameter.
+  final bool isVariadic;
+
+  /// Wether this is a optional named parameter.
+  bool get isNamed => id != null;
+
+  final IdentifierExpr? id;
+
+  final TypeExpr declType;
+
+  ParamTypeExpr(
+    this.declType, {
+    this.id,
+    this.isOptionalPositional = false,
+    this.isVariadic = false,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.paramTypeExpression);
+}
+
+class FuncTypeExpr extends TypeExpr {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitFunctionTypeExpr(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    for (final item in paramTypes) {
+      item.accept(visitor);
+    }
+    returnType.accept(visitor);
+  }
+
+  final List<GenericTypeParameterExpr> genericTypeParameters;
+
+  final List<ParamTypeExpr> paramTypes;
+
+  final TypeExpr returnType;
+
+  final bool hasOptionalParam;
+
+  final bool hasNamedParam;
+
+  @override
+  final bool isLocal;
+
+  FuncTypeExpr(
+    this.returnType, {
+    this.genericTypeParameters = const [],
+    this.paramTypes = const [],
+    this.hasOptionalParam = false,
+    this.hasNamedParam = false,
+    this.isLocal = true,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.functionTypeExpression);
+}
+
+class FieldTypeExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitFieldTypeExpr(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    fieldType.accept(visitor);
+  }
+
+  final String id;
+
+  final TypeExpr fieldType;
+
+  FieldTypeExpr(
+    this.id,
+    this.fieldType, {
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.fieldTypeExpression);
+}
+
+class StructuralTypeExpr extends TypeExpr {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitStructuralTypeExpr(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    for (final field in fieldTypes) {
+      field.accept(visitor);
+    }
+  }
+
+  final List<FieldTypeExpr> fieldTypes;
+
+  @override
+  final bool isLocal;
+
+  StructuralTypeExpr({
+    this.fieldTypes = const [],
+    this.isLocal = true,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.structuralTypeExpression);
+}
