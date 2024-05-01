@@ -489,3 +489,30 @@ class ListExpr extends ASTNode {
           isAwait: list.any((element) => element.isAwait),
         );
 }
+
+class InOfExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitInOfExpr(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    collection.accept(visitor);
+  }
+
+  final ASTNode collection;
+
+  final bool valueOf;
+
+  InOfExpr(
+    this.collection,
+    this.valueOf, {
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.inOfExpression,
+          isAwait: collection.isAwait,
+        );
+}
