@@ -73,3 +73,20 @@ abstract class ASTNode {
     this.length = 0,
   });
 }
+
+abstract class ASTAnnotation extends ASTNode {
+  final String content;
+
+  final bool isDocumentation;
+
+  ASTAnnotation(
+    super.type, {
+    required this.content,
+    required this.isDocumentation,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  });
+}
