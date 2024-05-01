@@ -818,3 +818,34 @@ class UnaryPostfixExpr extends ASTNode {
     super.length = 0,
   }) : super(InternalIdentifier.unaryPostfixExpression);
 }
+
+class BinaryExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) => visitor.visitBinaryExpr(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    left.accept(visitor);
+    right.accept(visitor);
+  }
+
+  final ASTNode left;
+
+  final String op;
+
+  final ASTNode right;
+
+  BinaryExpr(
+    this.left,
+    this.op,
+    this.right, {
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(
+          InternalIdentifier.binaryExpression,
+          isAwait: left.isAwait || right.isAwait,
+        );
+}
