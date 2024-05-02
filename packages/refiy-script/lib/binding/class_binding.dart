@@ -499,3 +499,40 @@ class RSRandomClassBinding extends RSExternalClass {
   dynamic instanceMemberGet(dynamic object, String id) =>
       (object as math.Random).htFetch(id);
 }
+
+class RSHashClassBinding extends RSExternalClass {
+  RSHashClassBinding() : super('Hash');
+
+  @override
+  dynamic memberGet(String id, {String? from}) {
+    switch (id) {
+      case 'Hash.uid4':
+        return (RSEntity entity,
+            {List<dynamic> positionalArgs = const [],
+            Map<String, dynamic> namedArgs = const {},
+            List<RSType> typeArgs = const []}) {
+          return uid4(positionalArgs.first);
+        };
+      case 'Hash.crcString':
+        return (RSEntity entity,
+            {List<dynamic> positionalArgs = const [],
+            Map<String, dynamic> namedArgs = const {},
+            List<RSType> typeArgs = const []}) {
+          String data = positionalArgs[0];
+          int crc = positionalArgs[1] ?? 0;
+          return crcString(data, crc);
+        };
+      case 'Hash.crcInt':
+        return (RSEntity entity,
+            {List<dynamic> positionalArgs = const [],
+            Map<String, dynamic> namedArgs = const {},
+            List<RSType> typeArgs = const []}) {
+          String data = positionalArgs[0];
+          int crc = positionalArgs[1] ?? 0;
+          return crcInt(data, crc);
+        };
+      default:
+        throw RSError.undefined(id);
+    }
+  }
+}
