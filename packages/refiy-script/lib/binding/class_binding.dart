@@ -536,3 +536,17 @@ class RSHashClassBinding extends RSExternalClass {
     }
   }
 }
+
+class RSSystemClassBinding extends RSExternalClass {
+  RSSystemClassBinding() : super('OS');
+
+  @override
+  dynamic memberGet(String id, {String? from}) {
+    switch (id) {
+      case 'OS.now':
+        return DateTime.now().millisecondsSinceEpoch;
+      default:
+        throw RSError.undefined(id);
+    }
+  }
+}
