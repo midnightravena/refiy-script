@@ -215,3 +215,25 @@ class RSListClassBinding extends RSExternalClass {
   dynamic instanceMemberGet(dynamic object, String id) =>
       (object as List).htFetch(id);
 }
+
+class RSSetClassBinding extends RSExternalClass {
+  RSSetClassBinding() : super('Set');
+
+  @override
+  dynamic memberGet(String id, {String? from}) {
+    switch (id) {
+      case 'Set':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            Set.from(positionalArgs);
+      default:
+        throw RSError.undefined(id);
+    }
+  }
+
+  @override
+  dynamic instanceMemberGet(dynamic object, String id) =>
+      (object as Set).htFetch(id);
+}
