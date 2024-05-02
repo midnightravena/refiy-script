@@ -2077,8 +2077,6 @@ class StructDecl extends ASTNode {
 
   final bool isTopLevel;
 
-  // final bool lateInitialize;
-
   StructDecl(
     this.id,
     this.definition, {
@@ -2096,4 +2094,63 @@ class StructDecl extends ASTNode {
           InternalIdentifier.structDeclaration,
           isBlock: true,
         );
+}
+
+class StructObjField extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitStructObjField(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    value?.accept(visitor);
+  }
+
+  // if key is omitted, the value must be a identifier expr.
+  final IdentifierExpr? key;
+
+  bool get isSpread => key == null;
+
+  final ASTNode fieldValue;
+
+  StructObjField({
+    this.key,
+    required this.fieldValue,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.literalStructField);
+}
+
+class StructObjExpr extends ASTNode {
+  @override
+  dynamic accept(AbstractASTVisitor visitor) =>
+      visitor.visitStructObjExpr(this);
+
+  @override
+  void subAccept(AbstractASTVisitor visitor) {
+    for (final field in fields) {
+      field.subAccept(visitor);
+    }
+  }
+
+  final IdentifierExpr? id;
+
+  final IdentifierExpr? prototypeId;
+
+  final List<StructObjField> fields;
+
+  StructObjExpr(
+    //this.internalName,
+    this.fields, {
+    this.id,
+    this.prototypeId,
+    super.source,
+    super.line = 0,
+    super.column = 0,
+    super.offset = 0,
+    super.length = 0,
+  }) : super(InternalIdentifier.literalStruct);
 }
