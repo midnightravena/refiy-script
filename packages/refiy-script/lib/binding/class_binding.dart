@@ -237,3 +237,47 @@ class RSSetClassBinding extends RSExternalClass {
   dynamic instanceMemberGet(dynamic object, String id) =>
       (object as Set).htFetch(id);
 }
+
+class RSMapClassBinding extends RSExternalClass {
+  RSMapClassBinding() : super('Map');
+
+  @override
+  dynamic memberGet(String id, {String? from}) {
+    switch (id) {
+      case 'Map':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            {};
+      default:
+        throw RSError.undefined(id);
+    }
+  }
+
+  @override
+  dynamic instanceMemberGet(dynamic object, String id) =>
+      (object as Map).htFetch(id);
+}
+
+class RSRandomClassBinding extends RSExternalClass {
+  RSRandomClassBinding() : super('Random');
+
+  @override
+  dynamic memberGet(String id, {String? from}) {
+    switch (id) {
+      case 'Random':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            math.Random(positionalArgs.first);
+      default:
+        throw RSError.undefined(id);
+    }
+  }
+
+  @override
+  dynamic instanceMemberGet(dynamic object, String id) =>
+      (object as math.Random).htFetch(id);
+}
