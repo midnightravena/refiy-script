@@ -550,3 +550,42 @@ class RSSystemClassBinding extends RSExternalClass {
     }
   }
 }
+
+class RSFutureClassBinding extends RSExternalClass {
+  RSFutureClassBinding() : super('Future');
+
+  @override
+  dynamic memberGet(String id, {String? from}) {
+    switch (id) {
+      case 'Future':
+        return (RSEntity entity,
+            {List<dynamic> positionalArgs = const [],
+            Map<String, dynamic> namedArgs = const {},
+            List<RSType> typeArgs = const []}) {
+          final HTFunction func = positionalArgs.first;
+          return Future(() => func.call());
+        };
+      case 'Future.wait':
+        return (RSEntity entity,
+            {List<dynamic> positionalArgs = const [],
+            Map<String, dynamic> namedArgs = const {},
+            List<RSType> typeArgs = const []}) {
+          final futures = List<Future<dynamic>>.from(positionalArgs.first);
+          return Future.wait(futures);
+        };
+      case 'Future.value':
+        return (RSEntity entity,
+            {List<dynamic> positionalArgs = const [],
+            Map<String, dynamic> namedArgs = const {},
+            List<RSType> typeArgs = const []}) {
+          return Future.value(positionalArgs.first);
+        };
+      default:
+        throw RSError.undefined(id);
+    }
+  }
+
+  @override
+  dynamic instanceMemberGet(dynamic object, String id) =>
+      (object as Future).htFetch(id);
+}
