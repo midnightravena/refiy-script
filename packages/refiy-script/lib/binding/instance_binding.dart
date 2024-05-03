@@ -286,3 +286,142 @@ extension DoubleBinding on double {
     }
   }
 }
+
+extension StringBinding on String {
+  dynamic htFetch(String id) {
+    switch (id) {
+      case 'characters':
+        return Characters(this);
+      case 'toString':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            toString();
+      case 'compareTo':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            compareTo(positionalArgs[0]);
+      case 'codeUnitAt':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            codeUnitAt(positionalArgs[0]);
+      case 'length':
+        return length;
+      case 'endsWith':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            endsWith(positionalArgs[0]);
+      case 'startsWith':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            startsWith(positionalArgs[0], positionalArgs[1]);
+      case 'indexOf':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            indexOf(positionalArgs[0], positionalArgs[1]);
+      case 'lastIndexOf':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            lastIndexOf(positionalArgs[0], positionalArgs[1]);
+      case 'isEmpty':
+        return isEmpty;
+      case 'isNotEmpty':
+        return isNotEmpty;
+      case 'substring':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            substring(positionalArgs[0], positionalArgs[1]);
+      case 'trim':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            trim();
+      case 'trimLeft':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            trimLeft();
+      case 'trimRight':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            trimRight();
+      case 'padLeft':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            padLeft(positionalArgs[0], positionalArgs[1]);
+      case 'padRight':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            padRight(positionalArgs[0], positionalArgs[1]);
+      case 'contains':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            contains(positionalArgs[0], positionalArgs[1]);
+      case 'replaceFirst':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            replaceFirst(
+                positionalArgs[0], positionalArgs[1], positionalArgs[2]);
+      case 'replaceAll':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            replaceAll(positionalArgs[0], positionalArgs[1]);
+      case 'replaceRange':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            replaceRange(
+                positionalArgs[0], positionalArgs[1], positionalArgs[2]);
+      case 'split':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            split(positionalArgs[0]);
+      case 'toLowerCase':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            toLowerCase();
+      case 'toUpperCase':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            toUpperCase();
+      default:
+        throw RSError.undefined(id);
+    }
+  }
+}
