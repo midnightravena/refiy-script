@@ -270,3 +270,19 @@ extension BigIntBinding on BigInt {
     }
   }
 }
+
+extension DoubleBinding on double {
+  dynamic htFetch(String id) {
+    switch (id) {
+      case 'toDoubleAsFixed':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            double.parse(toStringAsFixed(positionalArgs.first));
+      default:
+        // ignore: unnecessary_cast
+        return (this as num).htFetch(id);
+    }
+  }
+}
