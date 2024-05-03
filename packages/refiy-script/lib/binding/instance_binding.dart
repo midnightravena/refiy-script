@@ -189,3 +189,84 @@ extension IntBinding on int {
     }
   }
 }
+
+extension BigIntBinding on BigInt {
+  dynamic htFetch(String id) {
+    switch (id) {
+      case 'bitLength':
+        return bitLength;
+      case 'sign':
+        return sign;
+      case 'isEven':
+        return isEven;
+      case 'isOdd':
+        return isOdd;
+      case 'isNegative':
+        return isNegative;
+      case 'pow':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            pow(positionalArgs.first);
+      case 'modPow':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            modPow(positionalArgs[0], positionalArgs[1]);
+      case 'modInverse':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            modInverse(positionalArgs.first);
+      case 'gcd':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            gcd(positionalArgs.first);
+      case 'toUnsigned':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            toUnsigned(positionalArgs.first);
+      case 'toSigned':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            toSigned(positionalArgs.first);
+      case 'isValidInt':
+        return isValidInt;
+      case 'toInt':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            toInt();
+      case 'toDouble':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            toDouble();
+      case 'toString':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            toString();
+      case 'toRadixString':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            toRadixString(positionalArgs.first);
+      default:
+        throw RSError.undefined(id);
+    }
+  }
+}
