@@ -138,3 +138,54 @@ extension NumBinding on num {
     }
   }
 }
+
+extension IntBinding on int {
+  dynamic htFetch(String id) {
+    switch (id) {
+      case 'modPow':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            modPow(positionalArgs[0], positionalArgs[1]);
+      case 'modInverse':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            modInverse(positionalArgs[0]);
+      case 'gcd':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            gcd(positionalArgs[0]);
+      case 'isEven':
+        return isEven;
+      case 'isOdd':
+        return isOdd;
+      case 'bitLength':
+        return bitLength;
+      case 'toUnsigned':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            toUnsigned(positionalArgs[0]);
+      case 'toSigned':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            toSigned(positionalArgs[0]);
+      case 'toRadixString':
+        return (RSEntity entity,
+                {List<dynamic> positionalArgs = const [],
+                Map<String, dynamic> namedArgs = const {},
+                List<RSType> typeArgs = const []}) =>
+            toRadixString(positionalArgs[0]);
+      default:
+        return (this as num).htFetch(id);
+    }
+  }
+}
